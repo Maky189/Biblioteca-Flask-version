@@ -30,13 +30,13 @@
                 <div class="collapse navbar-collapse" id="navbar">
                     {% if session["user_id"] %}
                         <ul class="navbar-nav me-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/quote">Pesquisar Ilhas</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/buy">Introduzir Ilhas</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/sell">usuarios</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/history">Historico</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/">Painel Principal</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/books">Livros</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/users">Utilizadores</a></li>
                         </ul>
                         <ul class="navbar-nav ms-auto mt-2">
                             <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                            <li class="nav-item"><span class="nav-link">Logged in as: {{ session['user_id'] }}</span></li>
                         </ul>
                     {% else %}
                         <ul class="navbar-nav ms-auto mt-2">
