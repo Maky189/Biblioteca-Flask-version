@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Livros Disponíveis
+{% endblock %}
+
+{% block main %}
+    <h1>Livros Disponíveis</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Ano</th>
+                <th>ISBN</th>
+                <th>Categoria</th>
+                <th>Número de Cópias</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for livro in livros %}
+            <tr>
+                <td>{{ livro.ID }}</td>
+                <td>{{ livro.TITULO }}</td>
+                <td>{{ livro.AUTOR }}</td>
+                <td>{{ livro.ANO }}</td>
+                <td>{{ livro.ISBN }}</td>
+                <td>{{ livro.CATEGORIA }}</td>
+                <td>{{ livro.NUMERO_COPIAS }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

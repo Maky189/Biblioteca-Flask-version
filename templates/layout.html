@@ -31,8 +31,8 @@
                     {% if session["user_id"] %}
                         <ul class="navbar-nav me-auto mt-2">
                             <li class="nav-item"><a class="nav-link" href="/">Painel Principal</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/books">Livros</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/users">Utilizadores</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/livros">Livros</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/utilizadores">Utilizadores</a></li>
                         </ul>
                         <ul class="navbar-nav ms-auto mt-2">
                             <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
@@ -48,13 +48,15 @@
             </div>
         </nav>
 
-        {% if get_flashed_messages() %}
-            <header>
-                <div class="alert alert-primary mb-0 text-center" role="alert">
-                    {{ get_flashed_messages() | join(" ") }}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-info" role="alert">
+                    {% for message in messages %}
+                        {{ message }}<br>
+                    {% endfor %}
                 </div>
-            </header>
-        {% endif %}
+            {% endif %}
+        {% endwith %}
 
         <main class="container py-5 text-center">
             {% block main %}{% endblock %}

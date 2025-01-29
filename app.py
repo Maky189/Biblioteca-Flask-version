@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, session, request, jsonify
+from flask import Flask, render_template, redirect, url_for, session, request, flash
 from config import Config
 from models import db
 from login_config import login_required
@@ -32,12 +32,31 @@ app.secret_key = 'your_secret_key'
 @login_required
 def index():
     if request.method == 'GET':
+        user = db.session.execute(text("SELECT NOME FROM ESTUDANTES WHERE ID = :id"), {'id': session['user_id']}).fetchone()
+        if not user:
+            user = db.session.execute(text("SELECT NOME FROM PROFESSORES WHERE ID = :id"), {'id': session['user_id']}).fetchone()
+        
+        if user:
+            user_name = user[0]
+        else:
+            user_name = "Unknown User"
+        
         estudante_livros = db.session.execute(text("SELECT LIVROS FROM ESTUDANTES WHERE ID = :id"), {'id': session['user_id']}).fetchone()
         if estudante_livros and estudante_livros[0]:
             livros = db.session.execute(text("SELECT * FROM LIVROS WHERE ID IN :livros"), {'livros': tuple(estudante_livros[0].split(','))}).fetchall()
         else:
             livros = db.session.execute(text("SELECT * FROM LIVROS WHERE NUMERO_COPIAS > 0")).fetchall()
-        return render_template('index.html', livros=livros)
+        
+        user_books = db.session.execute(text("""
+            SELECT LIVROS.ID, LIVROS.TITULO, LIVROS.AUTOR, LIVROS.ANO, LIVROS.ISBN, LIVROS.CATEGORIA
+            FROM EMPRESTIMOS
+            JOIN LIVROS ON EMPRESTIMOS.LIVRO_ID = LIVROS.ID
+            WHERE EMPRESTIMOS.ALUNO_ID = :id OR EMPRESTIMOS.PROFESSOR_ID = :id
+        """), {'id': session['user_id']}).fetchall()
+        
+        available_books = db.session.execute(text("SELECT * FROM LIVROS WHERE NUMERO_COPIAS > 0")).fetchall()
+        
+        return render_template('index.html', livros=livros, user_books=user_books, available_books=available_books, user_name=user_name)
     return render_template('index.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -127,7 +146,7 @@ def register():
         else:
             return render_template('register.html', message='Invalid user type')
 
-@app.route('/manage_users', methods=['POST'])
+@app.route('/gerenciar_usuarios', methods=['POST'])
 @login_required
 def manage_users():
     nome = request.form.get('nome')
@@ -137,19 +156,19 @@ def manage_users():
     email = request.form.get('email')
     
     if nome == '' or password == '':
-        return redirect(url_for('index', message='Username and password are required'))
+        return redirect(url_for('index', message='Nome de usuário e senha são obrigatórios'))
     if password != confirmation:
-        return redirect(url_for('index', message='Passwords must match'))
+        return redirect(url_for('index', message='As senhas devem coincidir'))
     
     try:
         stmt = text("INSERT INTO ESTUDANTES (NOME, CONTACTO, EMAIL, PASS) VALUES (:nome, :contacto, :email, :password)")
         db.session.execute(stmt, {'nome': nome, 'contacto': contacto, 'email': email, 'password': generate_password_hash(password)})
         db.session.commit()
-        return redirect(url_for('index', message='User saved successfully'))
+        return redirect(url_for('index', message='Usuário salvo com sucesso'))
     except Exception as e:
-        return redirect(url_for('index', message='An error occurred while saving the user'))
+        return redirect(url_for('index', message='Ocorreu um erro ao salvar o usuário'))
 
-@app.route('/manage_books', methods=['POST'])
+@app.route('/gerenciar_livros', methods=['POST'])
 @login_required
 def manage_books():
     titulo = request.form.get('titulo')
@@ -160,34 +179,90 @@ def manage_books():
     numero_copias = request.form.get('numero_copias')
     
     if titulo == '' or autor == '':
-        return redirect(url_for('index', message='Title and author are required'))
+        return redirect(url_for('index', message='Título e autor são obrigatórios'))
     
     try:
         stmt = text("INSERT INTO LIVROS (TITULO, AUTOR, ANO, ISBN, CATEGORIA, NUMERO_COPIAS) VALUES (:titulo, :autor, :ano, :isbn, :categoria, :numero_copias)")
         db.session.execute(stmt, {'titulo': titulo, 'autor': autor, 'ano': ano, 'isbn': isbn, 'categoria': categoria, 'numero_copias': numero_copias})
         db.session.commit()
-        return redirect(url_for('index', message='Book saved successfully'))
+        return redirect(url_for('index', message='Livro salvo com sucesso'))
     except Exception as e:
-        return redirect(url_for('index', message='An error occurred while saving the book'))
+        return redirect(url_for('index', message='Ocorreu um erro ao salvar o livro'))
 
-@app.route('/manage_loans', methods=['POST'])
+@app.route('/gerenciar_emprestimos', methods=['POST'])
 @login_required
 def manage_loans():
-    user_id = request.form.get('user_id')
-    book_id = request.form.get('book_id')
-    data_entrada = request.form.get('data_entrada')
-    data_saida = request.form.get('data_saida')
+    book_title = request.form.get('book_id')
     
-    if user_id == '' or book_id == '':
-        return redirect(url_for('index', message='User ID and Book ID are required'))
+    if book_title == '':
+        flash('Nome do livro é obrigatório')
+        return redirect(url_for('index'))
     
     try:
-        stmt = text("INSERT INTO EMPRESTIMOS (ALUNO_ID, LIVRO_ID, DATA_ENTRADA, DATA_SAIDA) VALUES (:user_id, :book_id, :data_entrada, :data_saida)")
-        db.session.execute(stmt, {'user_id': user_id, 'book_id': book_id, 'data_entrada': data_entrada, 'data_saida': data_saida})
+        book = db.session.execute(text("SELECT ID, NUMERO_COPIAS FROM LIVROS WHERE TITULO = :titulo"), {'titulo': book_title}).fetchone()
+        if not book:
+            flash('Livro não encontrado')
+            return redirect(url_for('index'))
+        
+        if book.NUMERO_COPIAS <= 0:
+            flash('Livro indisponível')
+            return redirect(url_for('index'))
+        
+        user_id = session['user_id']
+        user_type = db.session.execute(text("SELECT 'ESTUDANTE' AS tipo FROM ESTUDANTES WHERE ID = :id UNION SELECT 'PROFESSOR' AS tipo FROM PROFESSORES WHERE ID = :id"), {'id': user_id}).fetchone()
+        
+        if not user_type:
+            flash('Usuário não encontrado')
+            return redirect(url_for('index'))
+        
+        if user_type.tipo == 'ESTUDANTE':
+            stmt = text("INSERT INTO EMPRESTIMOS (ALUNO_ID, LIVRO_ID, DATA_ENTRADA) VALUES (:user_id, :book_id, CURDATE())")
+        else:
+            stmt = text("INSERT INTO EMPRESTIMOS (PROFESSOR_ID, LIVRO_ID, DATA_ENTRADA) VALUES (:user_id, :book_id, CURDATE())")
+        
+        db.session.execute(stmt, {'user_id': user_id, 'book_id': book.ID})
+        db.session.execute(text("UPDATE LIVROS SET NUMERO_COPIAS = NUMERO_COPIAS - 1 WHERE ID = :id"), {'id': book.ID})
         db.session.commit()
-        return redirect(url_for('index', message='Loan saved successfully'))
+        
+        # Get the loan details for debugging
+        loan_details = db.session.execute(text("""
+            SELECT DATA_ENTRADA, DATA_SAIDA
+            FROM EMPRESTIMOS
+            WHERE LIVRO_ID = :book_id AND (ALUNO_ID = :user_id OR PROFESSOR_ID = :user_id)
+            ORDER BY ID DESC LIMIT 1
+        """), {'book_id': book.ID, 'user_id': user_id}).fetchone()
+        
+        # Update user_books and available_books after the loan
+        user_books = db.session.execute(text("""
+            SELECT LIVROS.ID, LIVROS.TITULO, LIVROS.AUTOR, LIVROS.ANO, LIVROS.ISBN, LIVROS.CATEGORIA
+            FROM EMPRESTIMOS
+            JOIN LIVROS ON EMPRESTIMOS.LIVRO_ID = LIVROS.ID
+            WHERE EMPRESTIMOS.ALUNO_ID = :id OR EMPRESTIMOS.PROFESSOR_ID = :id
+        """), {'id': session['user_id']}).fetchall()
+        
+        available_books = db.session.execute(text("SELECT * FROM LIVROS WHERE NUMERO_COPIAS > 0")).fetchall()
+        
+        flash(f'Empréstimo salvo com sucesso. Data de Entrada: {loan_details.DATA_ENTRADA}, Data de Saída: {loan_details.DATA_SAIDA}')
+        return render_template('index.html', user_books=user_books, available_books=available_books)
     except Exception as e:
-        return redirect(url_for('index', message='An error occurred while saving the loan'))
+        flash(f'Ocorreu um erro ao salvar o empréstimo: {str(e)}')
+        flash(f'Book Title: {book_title}')
+        flash(f'User ID: {user_id}')
+        flash(f'Executed Query: {stmt}')
+        return redirect(url_for('index'))
+
+@app.route('/livros', methods=['GET'])
+@login_required
+def livros():
+    livros = db.session.execute(text("SELECT * FROM LIVROS WHERE NUMERO_COPIAS > 0")).fetchall()
+    return render_template('livros.html', livros=livros)
+
+@app.route('/utilizadores', methods=['GET'])
+@login_required
+def utilizadores():
+    estudantes = db.session.execute(text("SELECT * FROM ESTUDANTES")).fetchall()
+    professores = db.session.execute(text("SELECT * FROM PROFESSORES")).fetchall()
+    return render_template('utilizadores.html', estudantes=estudantes, professores=professores)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)

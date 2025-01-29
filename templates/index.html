@@ -11,6 +11,10 @@
         </div>
     {% endif %}
 
+    <div class="corner">
+        Logged in as: {{ user_name }}
+    </div>
+
     <ul class="nav nav-tabs" id="mainTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">Gestão de Utilizadores</button>
@@ -20,6 +24,9 @@
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="loans-tab" data-bs-toggle="tab" data-bs-target="#loans" type="button" role="tab" aria-controls="loans" aria-selected="false">Empréstimos</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="owned-books-tab" data-bs-toggle="tab" data-bs-target="#owned-books" type="button" role="tab" aria-controls="owned-books" aria-selected="false">Meus Livros</button>
         </li>
     </ul>
     <div class="tab-content" id="mainTabsContent">
@@ -75,22 +82,46 @@
         <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
             <!-- Loan management form -->
             <h3>Empréstimos</h3>
-            <form id="loan-form" action="/manage_loans" method="post">
+            <form id="loan-form" action="/gerenciar_emprestimos" method="post">
                 <!-- Form fields for loan management -->
                 <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="user_id" name="user_id" placeholder="ID do Utilizador" type="text">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="book_id" name="book_id" placeholder="ID do Livro" type="text">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="data_entrada" name="data_entrada" placeholder="Data de Entrada" type="date">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="data_saida" name="data_saida" placeholder="Data de Saída" type="date">
+                    <input autocomplete="off" class="form-control mx-auto w-auto" id="book_id" name="book_id" placeholder="Nome do Livro" list="available-books" type="text">
+                    <datalist id="available-books">
+                        {% for book in available_books %}
+                        <option value="{{ book.TITULO }}">{{ book.TITULO }}</option>
+                        {% endfor %}
+                    </datalist>
                 </div>
                 <button class="btn btn-primary" type="submit">Salvar</button>
             </form>
+        </div>
+        <div class="tab-pane fade" id="owned-books" role="tabpanel" aria-labelledby="owned-books-tab">
+            <!-- Owned books table -->
+            <h3>Meus Livros</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Ano</th>
+                        <th>ISBN</th>
+                        <th>Categoria</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for livro in user_books %}
+                    <tr>
+                        <td>{{ livro.ID }}</td>
+                        <td>{{ livro.TITULO }}</td>
+                        <td>{{ livro.AUTOR }}</td>
+                        <td>{{ livro.ANO }}</td>
+                        <td>{{ livro.ISBN }}</td>
+                        <td>{{ livro.CATEGORIA }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 {% endblock %}

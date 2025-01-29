@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Utilizadores
+{% endblock %}
+
+{% block main %}
+    <h1>Estudantes</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Número de Estudante</th>
+                <th>Curso</th>
+                <th>Contacto</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for estudante in estudantes %}
+            <tr>
+                <td>{{ estudante.ID }}</td>
+                <td>{{ estudante.NOME }}</td>
+                <td>{{ estudante.NUMERO_ESTUDANTE }}</td>
+                <td>{{ estudante.CURSO }}</td>
+                <td>{{ estudante.CONTACTO }}</td>
+                <td>{{ estudante.EMAIL }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>Professores</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Número de Funcionário</th>
+                <th>Departamento</th>
+                <th>Contacto</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for professor in professores %}
+            <tr>
+                <td>{{ professor.ID }}</td>
+                <td>{{ professor.NOME }}</td>
+                <td>{{ professor.NUMERO_FUNCIONARIO }}</td>
+                <td>{{ professor.DEPARTAMENTO }}</td>
+                <td>{{ professor.CONTACTO }}</td>
+                <td>{{ professor.EMAIL }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
