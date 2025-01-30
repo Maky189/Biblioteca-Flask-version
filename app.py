@@ -114,7 +114,7 @@ def register():
                 
                 user = db.session.execute(text("SELECT ID FROM ESTUDANTES WHERE NOME = :nome"), {'nome': nome}).fetchone()
                 if user:
-                    session['user_id'] = user[0]  # Ensure the correct index is used to retrieve the ID
+                    session['user_id'] = user[0]  
                     return redirect(url_for('index'))
                 else:
                     return render_template('register.html', message='User registration failed')
@@ -136,7 +136,7 @@ def register():
                 
                 user = db.session.execute(text("SELECT ID FROM PROFESSORES WHERE NOME = :nome"), {'nome': nome}).fetchone()
                 if user:
-                    session['user_id'] = user[0]  # Ensure the correct index is used to retrieve the ID
+                    session['user_id'] = user[0]  
                     return redirect(url_for('index'))
                 else:
                     return render_template('register.html', message='User registration failed')
