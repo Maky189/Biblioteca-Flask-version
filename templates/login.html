@@ -5,14 +5,16 @@
 {% endblock %}
 
 {% block main %}
-
-    <form action="/login" method="post">
-        <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="nome" placeholder="Nome" type="text">
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password">
-        </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
-    </form>
+    <div class="card bg-light text-dark p-3 mx-auto" style="max-width: 400px;">
+        <h3>Login</h3>
+        <form action="/login" method="post">
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="nome" placeholder="Nome" type="text">
+            </div>
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password">
+            </div>
+            <button class="btn btn-primary" type="submit">Log In</button>
+        </form>
+    </div>
 {% endblock %}

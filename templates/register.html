@@ -14,56 +14,59 @@
         <button class="btn btn-primary me-2" onclick="showForm('student')">Registar Aluno</button>
         <button class="btn btn-secondary" onclick="showForm('professor')">Registar Professor</button>
     </div>
-    <form id="student-form" name="register_student" action="/register" method="post" style="display: none;">
-        <input type="hidden" name="user_type" value="student">
-        <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="nome" name="nome" placeholder="Nome" type="text">
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Confirmar Password" type="password">
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" id="numero_estudante" name="numero_estudante" placeholder="Numero Estudante" type="text">
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" id="curso" name="curso" placeholder="Curso" type="text">
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" id="contacto" name="contacto" placeholder="Contacto" type="text">
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" id="email" name="email" placeholder="Email" type="text">
-        </div>
-        <button class="btn btn-primary" type="submit">Register</button>
-    </form>
-    <form id="professor-form" name="register_professor" action="/register" method="post" style="display: none;">
-        <input type="hidden" name="user_type" value="professor">
-        <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="nome" name="nome" placeholder="Nome" type="text">
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
-        </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Confirmar Password" type="password">
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" id="numero_funcionario" name="numero_funcionario" placeholder="Numero Funcionario" type="text">
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" id="departamento" name="departamento" placeholder="Departamento" type="text">
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" id="contacto" name="contacto" placeholder="Contacto" type="text">
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" id="email" name="email" placeholder="Email" type="text">
-        </div>
-        <button class="btn btn-primary" type="submit">Register</button>
-    </form>
+    <div class="card bg-light text-dark p-3 mx-auto" style="max-width: 400px;">
+        <h3>Register</h3>
+        <form id="student-form" name="register_student" action="/register" method="post" style="display: none;">
+            <input type="hidden" name="user_type" value="student">
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="nome" name="nome" placeholder="Nome" type="text">
+            </div>
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+            </div>
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Confirmar Password" type="password">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="numero_estudante" name="numero_estudante" placeholder="Numero Estudante" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="curso" name="curso" placeholder="Curso" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="contacto" name="contacto" placeholder="Contacto" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="email" name="email" placeholder="Email" type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Register</button>
+        </form>
+        <form id="professor-form" name="register_professor" action="/register" method="post" style="display: none;">
+            <input type="hidden" name="user_type" value="professor">
+            <div class="mb-3">
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="nome" name="nome" placeholder="Nome" type="text">
+            </div>
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+            </div>
+            <div class="mb-3">
+                <input class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Confirmar Password" type="password">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="numero_funcionario" name="numero_funcionario" placeholder="Numero Funcionario" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="departamento" name="departamento" placeholder="Departamento" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="contacto" name="contacto" placeholder="Contacto" type="text">
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" id="email" name="email" placeholder="Email" type="text">
+            </div>
+            <button class="btn btn-primary" type="submit">Register</button>
+        </form>
+    </div>
     <script>
         function showForm(type) {
             document.getElementById('student-form').style.display = type === 'student' ? 'block' : 'none';

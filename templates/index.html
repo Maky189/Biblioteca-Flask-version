@@ -15,113 +15,115 @@
         Logged in as: {{ user_name }}
     </div>
 
-    <ul class="nav nav-tabs" id="mainTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">Gestão de Utilizadores</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="books-tab" data-bs-toggle="tab" data-bs-target="#books" type="button" role="tab" aria-controls="books" aria-selected="false">Gestão de Livros</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="loans-tab" data-bs-toggle="tab" data-bs-target="#loans" type="button" role="tab" aria-controls="loans" aria-selected="false">Empréstimos</button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="owned-books-tab" data-bs-toggle="tab" data-bs-target="#owned-books" type="button" role="tab" aria-controls="owned-books" aria-selected="false">Meus Livros</button>
-        </li>
-    </ul>
-    <div class="tab-content" id="mainTabsContent">
-        <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
-            <!-- User management form -->
-            <h3>Gestão de Utilizadores</h3>
-            <form id="user-form" action="/manage_users" method="post">
-                <!-- Form fields for user management -->
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="nome" name="nome" placeholder="Nome" type="text">
-                </div>
-                <div class="mb-3">
-                    <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
-                </div>
-                <div class="mb-3">
-                    <input class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Confirmar Password" type="password">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="contacto" name="contacto" placeholder="Contacto" type="text">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="email" name="email" placeholder="Email" type="text">
-                </div>
-                <button class="btn btn-primary" type="submit">Salvar</button>
-            </form>
-        </div>
-        <div class="tab-pane fade" id="books" role="tabpanel" aria-labelledby="books-tab">
-            <!-- Book management form -->
-            <h3>Gestão de Livros</h3>
-            <form id="book-form" action="/manage_books" method="post">
-                <!-- Form fields for book management -->
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="titulo" name="titulo" placeholder="Título" type="text">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="autor" name="autor" placeholder="Autor" type="text">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="ano" name="ano" placeholder="Ano" type="text">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="isbn" name="isbn" placeholder="ISBN" type="text">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="categoria" name="categoria" placeholder="Categoria" type="text">
-                </div>
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="numero_copias" name="numero_copias" placeholder="Número de Cópias" type="text">
-                </div>
-                <button class="btn btn-primary" type="submit">Salvar</button>
-            </form>
-        </div>
-        <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
-            <!-- Loan management form -->
-            <h3>Empréstimos</h3>
-            <form id="loan-form" action="/gerenciar_emprestimos" method="post">
-                <!-- Form fields for loan management -->
-                <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" id="book_id" name="book_id" placeholder="Nome do Livro" list="available-books" type="text">
-                    <datalist id="available-books">
-                        {% for book in available_books %}
-                        <option value="{{ book.TITULO }}">{{ book.TITULO }}</option>
+    <div class="card bg-light text-dark p-3">
+        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">Gestão de Utilizadores</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="books-tab" data-bs-toggle="tab" data-bs-target="#books" type="button" role="tab" aria-controls="books" aria-selected="false">Gestão de Livros</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="loans-tab" data-bs-toggle="tab" data-bs-target="#loans" type="button" role="tab" aria-controls="loans" aria-selected="false">Empréstimos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="owned-books-tab" data-bs-toggle="tab" data-bs-target="#owned-books" type="button" role="tab" aria-controls="owned-books" aria-selected="false">Meus Livros</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="mainTabsContent">
+            <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+                <!-- User management form -->
+                <h3>Gestão de Utilizadores</h3>
+                <form id="user-form" action="/manage_users" method="post">
+                    <!-- Form fields for user management -->
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="nome" name="nome" placeholder="Nome" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="Password" type="password">
+                    </div>
+                    <div class="mb-3">
+                        <input class="form-control mx-auto w-auto" id="confirmation" name="confirmation" placeholder="Confirmar Password" type="password">
+                    </div>
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="contacto" name="contacto" placeholder="Contacto" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="email" name="email" placeholder="Email" type="text">
+                    </div>
+                    <button class="btn btn-primary" type="submit">Salvar</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="books" role="tabpanel" aria-labelledby="books-tab">
+                <!-- Book management form -->
+                <h3>Gestão de Livros</h3>
+                <form id="book-form" action="/manage_books" method="post">
+                    <!-- Form fields for book management -->
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="titulo" name="titulo" placeholder="Título" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="autor" name="autor" placeholder="Autor" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="ano" name="ano" placeholder="Ano" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="isbn" name="isbn" placeholder="ISBN" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="categoria" name="categoria" placeholder="Categoria" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="numero_copias" name="numero_copias" placeholder="Número de Cópias" type="text">
+                    </div>
+                    <button class="btn btn-primary" type="submit">Salvar</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
+                <!-- Loan management form -->
+                <h3>Empréstimos</h3>
+                <form id="loan-form" action="/gerenciar_emprestimos" method="post">
+                    <!-- Form fields for loan management -->
+                    <div class="mb-3">
+                        <input autocomplete="off" class="form-control mx-auto w-auto" id="book_id" name="book_id" placeholder="Nome do Livro" list="available-books" type="text">
+                        <datalist id="available-books">
+                            {% for book in available_books %}
+                            <option value="{{ book.TITULO }}">{{ book.TITULO }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Salvar</button>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="owned-books" role="tabpanel" aria-labelledby="owned-books-tab">
+                <!-- Owned books table -->
+                <h3>Meus Livros</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Título</th>
+                            <th>Autor</th>
+                            <th>Ano</th>
+                            <th>ISBN</th>
+                            <th>Categoria</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for livro in user_books %}
+                        <tr>
+                            <td>{{ livro.ID }}</td>
+                            <td>{{ livro.TITULO }}</td>
+                            <td>{{ livro.AUTOR }}</td>
+                            <td>{{ livro.ANO }}</td>
+                            <td>{{ livro.ISBN }}</td>
+                            <td>{{ livro.CATEGORIA }}</td>
+                        </tr>
                         {% endfor %}
-                    </datalist>
-                </div>
-                <button class="btn btn-primary" type="submit">Salvar</button>
-            </form>
-        </div>
-        <div class="tab-pane fade" id="owned-books" role="tabpanel" aria-labelledby="owned-books-tab">
-            <!-- Owned books table -->
-            <h3>Meus Livros</h3>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Título</th>
-                        <th>Autor</th>
-                        <th>Ano</th>
-                        <th>ISBN</th>
-                        <th>Categoria</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for livro in user_books %}
-                    <tr>
-                        <td>{{ livro.ID }}</td>
-                        <td>{{ livro.TITULO }}</td>
-                        <td>{{ livro.AUTOR }}</td>
-                        <td>{{ livro.ANO }}</td>
-                        <td>{{ livro.ISBN }}</td>
-                        <td>{{ livro.CATEGORIA }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}

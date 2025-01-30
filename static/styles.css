@@ -15,6 +15,12 @@ nav .navbar-brand .green {
     color: #2e944b;
 }
 
+nav .navbar-brand .um {
+    color: #004080; /* Universidade do Mindelo color */
+    font-family: 'Arial', sans-serif; /* Matching font */
+    font-weight: bold;
+}
+
 /* Align select elements to the side */
 .form-select {
     display: inline-block;
@@ -28,6 +34,17 @@ body {
     background-position: center center;
     background-repeat: no-repeat;
     transition: background-image 0.5s ease-in-out;
+}
+
+body.background-cover {
+    background-image: url('/static/cover.jpeg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
 }
 
 /* Specific background size for CaboVerde.jpg */
