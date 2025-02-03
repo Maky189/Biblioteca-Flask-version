@@ -45,19 +45,19 @@ CREATE DATABASE Biblioteca;
 
 ### Passo 5: Executar os Scripts SQL
 Execute os scripts SQL para criar as tabelas e inserir dados iniciais.
+Substitua usuario pelo seu username em Mysql
 
 ```bash
-mysql -u root -p Biblioteca < basedados/create.sql
+mysql -u usuario -p Biblioteca < basedados/create.sql
 ```
 
 ## Executar a Aplicação
 
-### Passo 1: Configurar Variáveis de Ambiente
-Crie um arquivo `.env` na raiz do projeto e adicione as seguintes variáveis:
+### Passo 1: Configurar MYySql na apllicação
+Mude o nome pelo seu username em mysql e coloque o seu password em config.py:
 
-```
-FLASK_APP=app.py
-FLASK_ENV=development
+```python
+f"mysql+pymysql://nome:password@localhost/Biblioteca"
 ```
 
 ### Passo 2: Iniciar a Aplicação Flask

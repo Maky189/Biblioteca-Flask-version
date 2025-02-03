@@ -224,7 +224,6 @@ def manage_loans():
         db.session.execute(text("UPDATE LIVROS SET NUMERO_COPIAS = NUMERO_COPIAS - 1 WHERE ID = :id"), {'id': book.ID})
         db.session.commit()
         
-        # Get the loan details for debugging
         loan_details = db.session.execute(text("""
             SELECT DATA_ENTRADA, DATA_SAIDA
             FROM EMPRESTIMOS
@@ -232,7 +231,6 @@ def manage_loans():
             ORDER BY ID DESC LIMIT 1
         """), {'book_id': book.ID, 'user_id': user_id}).fetchone()
         
-        # Update user_books and available_books after the loan
         user_books = db.session.execute(text("""
             SELECT LIVROS.ID, LIVROS.TITULO, LIVROS.AUTOR, LIVROS.ANO, LIVROS.ISBN, LIVROS.CATEGORIA
             FROM EMPRESTIMOS
